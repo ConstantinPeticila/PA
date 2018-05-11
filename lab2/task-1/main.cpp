@@ -1,0 +1,79 @@
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include  <bits/stdc++.h>
+#include <algorithm>
+using namespace std;
+
+struct Object {
+	int weight;
+	int price;
+
+	Object(int _weight, int _price) : weight(_weight), price(_price) {}
+};
+
+class Task {
+ public:
+	void solve() {
+		read_input();
+		print_output(get_result());
+	}
+
+ private:
+	int n, w;
+	vector<Object> objs;
+
+	void read_input() {
+		ifstream fin("in");
+		fin >> n >> w;
+		for (int i = 0, weight, price; i < n; i++) {
+			fin >> weight >> price;
+			objs.push_back(Object(weight, price));
+		}
+		fin.close();
+	}
+
+	bool static comparator (Object a, Object b)
+	 {
+
+    return (1.0*a.price/a.weight >= 1.0* b.price/b.weight);
+	}
+
+
+	double  get_result() {
+
+		sort(objs.begin(),objs.end(),comparator );
+		double prof = 0,greu = 0;
+		int i = 0;
+		while(greu <=  w){
+			if(objs[i].weight + greu <= w){
+				prof += objs[i].price;
+				greu+= objs[i].weight;
+
+			}
+			else
+			{
+				prof += ( (w - greu) / objs[i].weight) * objs[i].price;
+				break;
+			}
+			i++;
+
+		}
+		/*
+		TODO: Aflati profitul maxim care se poate obtine cu obiectele date.
+		*/
+		return prof;
+	}
+
+	void print_output(double result) {
+		ofstream fout("out");
+		fout << setprecision(4) << fixed << result;
+		fout.close();
+	}
+};
+
+int main() {
+	Task task;
+	task.solve();
+	return 0;
+}
